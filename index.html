@@ -23,38 +23,19 @@
 
             jQuery(function($) {
                 "use strict";
-                var dados = [{
-                        codigo: 1,
-                        titulo: "aaaaaa",
-                        status: "Erro",
-                        nota: 10,
-                        identificacao: "a1"
-                    }, {
-                        codigo: 2,
-                        titulo: "bbbbbbb",
-                        status: "OK",
-                        nota: 7,
-                        identificacao: "rtertt"
-                    }, {
-                        codigo: 3,
-                        titulo: "cccccccc",
-                        status: "OK",
-                        nota: 10,
-                        identificacao: "ca>>>|0"
-                    }, {
-                        codigo: 4,
-                        titulo: "ddddddd",
-                        status: "OK",
-                        nota: 6,
-                        identificacao: "a19090"
-                    }, {
-                        codigo: 5,
-                        titulo: "eeeee",
-                        status: "Erro",
-                        nota: 8,
-                        identificacao: "eeeeefdgsdfgsdfgsdfgsdfg"
-                    }];
-                //====
+                //gerar dados aleatorios
+                var dados = [];
+                for (var i = 0; i < 1999; i++) {
+                    dados.push({
+                        codigo: i,
+                        titulo: Math.random().toString(33).substring(2, 40),
+                        status: (["Erro", "OK", "####"])[~~(Math.random() * 3)],
+                        nota: ~~(Math.random() * 11),
+                        identificacao: Math.random().toString(33).substring(2, 25)
+                    });
+                }
+                //===========================
+                //exibir os dados
                 $("#grid-conteudo").html(Template.renderizar({
                     template: $("#grid-conteudo-template").html(),
                     dados: dados,
@@ -68,7 +49,7 @@
                 }));
 
             });
-       
+
         </script>
 
 
