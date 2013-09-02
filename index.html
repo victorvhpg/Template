@@ -28,10 +28,10 @@
                 for (var i = 0; i < 1999; i++) {
                     dados.push({
                         codigo: i,
-                        titulo: Math.random().toString(33).substring(2, 40),
+                        titulo: Math.random().toString(33).substring(2,11),
                         status: (["Erro", "OK", "####"])[~~(Math.random() * 3)],
                         nota: ~~(Math.random() * 11),
-                        identificacao: Math.random().toString(33).substring(2, 25)
+                        identificacao: Math.random().toString(33).substring(2,11)
                     });
                 }
                 //===========================
