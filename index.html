@@ -24,14 +24,23 @@
             jQuery(function($) {
                 "use strict";
                 //gerar dados aleatorios
+                var _aleatorio = function(qtd) {
+                    var _tamanho, _caracteres = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+                    _tamanho = _caracteres.length;
+                    return (function(caracteres, tamanho) {
+                        return(Array.apply(null, new Array(qtd))).map(function() {
+                            return caracteres.charAt(~~(Math.random() * tamanho));
+                        }).join("");
+                    })(_caracteres, _tamanho);
+                };
                 var dados = [];
                 for (var i = 0; i < 1999; i++) {
                     dados.push({
                         codigo: i,
-                        titulo: Math.random().toString(33).substring(2,11),
+                        titulo: _aleatorio(20),
                         status: (["Erro", "OK", "####"])[~~(Math.random() * 3)],
                         nota: ~~(Math.random() * 11),
-                        identificacao: Math.random().toString(33).substring(2,11)
+                        identificacao: _aleatorio(20)
                     });
                 }
                 //===========================
