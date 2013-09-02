@@ -1,7 +1,7 @@
 /**
- * 
  * @victorvhpg
- * template simples 
+ * https://github.com/victorvhpg/Template
+ * template javascript simples 
  */
 
 var Template = (function(window) {
@@ -13,7 +13,6 @@ var Template = (function(window) {
         parametroFim: "}"
     },
     document = window.document, Template, $ = window.jQuery;
-
 
     Template = function(config) {
         this.config = $.extend({}, _configPadrao, config);
@@ -50,6 +49,7 @@ var Template = (function(window) {
             return $resultados;
         }
     };
+    
     Template.renderizar = function(parametros) {
         var tmpl = Template.getInstancia(parametros.config);
         return tmpl.renderizar(parametros);
