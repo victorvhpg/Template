@@ -30,7 +30,7 @@ var Template = (function(window) {
                     parametroInicio = this.config.parametroInicio,
                     parametroFim = this.config.parametroFim,
                     serializaObj = this.config.serializaObj,
-                    template = parametros.template, item;
+                    template = parametros.template, item, $linhaHTML;
             if (!$.isArray(vetObjDados)) {
                 vetObjDados = [vetObjDados];
             }
@@ -39,17 +39,17 @@ var Template = (function(window) {
                 for (var j in vetObjDados[i]) {
                     item = item.replace(new RegExp(parametroInicio + j + parametroFim, "g"), vetObjDados[i][j]);
                 }
-                var $linhaHTML = $($.trim(item));
+                $linhaHTML = $($.trim(item));
                 serializaObj && $linhaHTML.attr("data-template-obj", JSON.stringify(vetObjDados[i]));
                 if (typeof aCadaLinha === "function") {
-                    $linhaHTML = aCadaLinha($linhaHTML, vetObjDados[i]);
+                    $linhaHTML = aCadaLinha($linhaHTML, vetObjDados[i]) || $linhaHTML;
                 }
                 $resultados.append($linhaHTML);
             }
             return $resultados;
         }
     };
-    
+
     Template.renderizar = function(parametros) {
         var tmpl = Template.getInstancia(parametros.config);
         return tmpl.renderizar(parametros);
