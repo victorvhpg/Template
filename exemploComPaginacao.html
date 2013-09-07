@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>  exemplo com paginacao  memoria</title>
+
+        <script type='text/javascript' src='http://code.jquery.com/jquery-2.0.2.js'></script>
+        <script type='text/javascript' src="http://victorvhpg.github.io/Template/Template.js"></script>
+
+
+        <style type='text/css'>
+
+            .paginacao{
+                display: inline-block;
+                padding-left: 0;
+                margin: 20px 0;
+                border-radius: 10px;
+            }
+            .paginacao > li{
+                display: inline;
+            }
+            .paginacao > li > a{
+                position: relative;
+                float: left;
+                padding: 6px 12px;
+                margin-left: -1px;              
+                text-decoration: none;
+                background-color: #FFF;
+                border: 1px solid #DDD;
+                color: #000;
+            }
+            .ativo , .ativo > a  {
+                background-color: #333 !important;
+                color: #fff  !important;
+            }
+            table{
+                width: 700px;
+                margin: 0 auto;
+            }
+            table td, table td {
+                border:1px solid #ccc;
+            }
+            table th {
+                background-color:#ddd
+            }
+        </style>
+
+        <script type='text/javascript'>
+            /**
+             * @victorvhpg
+             * https://github.com/victorvhpg/Template
+             * 
+             */
+            var Paginacao = (function($) {
+                "use strict";
+                var Paginacao = function() {
+                    this.qtdRegistroPorPagina = 10;
+                    this.qtdDePaginacao = 7;
+                    this.template = ["<ul  data-pg=\"container\"  class=\"paginacao\"   > ",
+                        "<li data-pg=\"anterior\" ><a href=\"#\">&laquo;</a></li>",
+                        "<li data-pg=\"numeros\" > <a href=\"#\"> {@numero} </a> </li>",
+                        "<li data-pg=\"proximo\" ><a href=\"#\">&raquo;</a></li> ",
+                        "</ul>"].join("");
+                    this.$tabela = null;
+                    this.$navegacao = null;
+                    this.$numeros = null;
+                    this.paginaAtual = 0;
+                    this.$btnAnterior = null;
+                    this.$btnProximo = null;
+                };
+                Paginacao.paginar = function($tabela) {
+                    return (new Paginacao()).init($tabela);
+                };
+                Paginacao.prototype = {
+                    posicionar: function(pagina) {
+                        var that, totalDeRegistros, totalDePaginas,
+                                metade, ini, fim, linhaIni, linhaFinal, $ativos;
+                        that = this;
+                        totalDeRegistros = this.$tabela.find("tbody tr").length;
+                        totalDePaginas = Math.ceil(totalDeRegistros / this.qtdRegistroPorPagina);
+                        if (pagina < 0 || pagina >= totalDePaginas) {
+                            return;
+                        }
+                        metade = ~~(this.qtdDePaginacao / 2);
+                        ini = pagina - metade;
+                        fim = ini + this.qtdDePaginacao;
+                        ini = Math.max(ini, 0);
+                        fim = Math.min(ini + this.qtdDePaginacao, totalDePaginas);
+                        if (fim - ini < totalDePaginas) {
+                            ini = Math.max(fim - this.qtdDePaginacao, 0);
+                        }
+                        this.$navegacao.find("[data-pg='numeros']").remove();
+                        for (var i = ini; i < fim; i++) {
+                            (function(i) {
+                                var $n = that.$numeros.clone();
+                                if (pagina === i) {
+                                    $n.addClass("ativo");
+                                }
+                                $n.html($n.html().replace("{@numero}", i + 1));
+                                that.$btnProximo.before($n);
+                                $n.on("click", function() {
+                                    that.posicionar(i);
+                                });
+                            })(i);
+                        }
+                        linhaIni = this.qtdRegistroPorPagina * pagina;
+                        linhaFinal = linhaIni + this.qtdRegistroPorPagina;
+                        $ativos = this.$tabela.find("tbody tr").hide().filter(function(indice) {
+                            return (indice >= linhaIni && indice < linhaFinal);
+                        }).show();
+                        that.$navegacao.parent().css("width", that.$tabela.width() + "px");
+                        $ativos.hide().fadeIn();
+                        this.paginaAtual = pagina;
+                    },
+                    init: function($tabela) {
+                        var that = this;
+                        this.$navegacao = $(this.template);
+                        this.$numeros = this.$navegacao.find("[data-pg='numeros']").remove().clone(true, true);
+                        this.$btnProximo = this.$navegacao.find("[data-pg='proximo']");
+                        this.$btnAnterior = this.$navegacao.find("[data-pg='anterior']");
+                        $tabela.after($("<div />", {
+                            css: {
+                                width: $tabela.width() + "px",
+                                "text-align": "center",
+                                overflow: "hidden",
+                                margin: "0 auto"
+                            }}).append(this.$navegacao));
+                        this.$tabela = $tabela;
+
+                        this.$btnProximo.on("click", function() {
+                            that.posicionar(that.paginaAtual + 1);
+                            return false;
+                        });
+
+                        this.$btnAnterior.on("click", function() {
+                            that.posicionar(that.paginaAtual - 1);
+                            return false;
+                        });
+                        this.posicionar(0);
+                        return this;
+                    }
+                };
+                return Paginacao;
+            })(jQuery);
+
+//=====================================================
+//=====================================================
+            //gerar dados aleatorios
+            var _aleatorio = function(qtd) {
+                var _tamanho, _caracteres = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+                _tamanho = _caracteres.length;
+                return (function(caracteres, tamanho) {
+                    return(Array.apply(null, new Array(qtd))).map(function() {
+                        return caracteres.charAt(~~(Math.random() * tamanho));
+                    }).join("");
+                })(_caracteres, _tamanho);
+            };
+
+//======================================================
+            jQuery(function($) {
+                "use strict";
+                var dados = [];
+                for (var i = 0; i < 1999; i++) {
+                    dados.push({
+                        codigo: i,
+                        titulo: _aleatorio(20),
+                        status: (["Erro", "OK", "####"])[~~(Math.random() * 3)],
+                        nota: ~~(Math.random() * 11),
+                        identificacao: _aleatorio(20)
+                    });
+                }
+
+                $("#grid-conteudo").html(Template.renderizar({
+                    template: $("#grid-conteudo-template").html(),
+                    dados: dados,
+                    aCadaLinha: function($linha, obj) {
+                        if (obj.status === "Erro") {
+                            $linha.css("background-color", "#ff0000");
+                        }
+                        return $linha;
+                    }
+                }));
+                //paginar ....
+                Paginacao.paginar($("#grid-conteudo").closest("table"));
+
+            });
+
+
+        </script>
+
+
+    </head>
+    <body>
+        @victorvhpg<br />
+        <a href="https://github.com/victorvhpg/Template" >https://github.com/victorvhpg/Template</a>
+        <br /><br />
+
+        <script type="text/template" id="grid-conteudo-template">  
+            <tr data-codigo="{@codigo}" > 
+                <td> {@codigo} </td>
+                <td> {@titulo}</td> 
+                <td> {@status} </td>
+                <td> {@nota}</td> 
+                <td> {@identificacao}</td> 
+                </tr>	
+        </script>
+
+        <table>
+            <thead>
+                <tr>
+                    <th> codigo </th>
+                    <th> titulo </th> 
+                    <th> status </th>
+                    <th> nota</th> 
+                    <th> identificacao</th>                 
+                </tr>
+            </thead>
+            <tbody id="grid-conteudo"></tbody>
+        </table>
+
+    </body>
+
+
+</html>
+
