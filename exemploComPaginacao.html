@@ -80,9 +80,8 @@
                         if (pagina < 0 || pagina >= totalDePaginas) {
                             return;
                         }
-                        metade = ~~(this.qtdDePaginacao / 2);
-                        ini = pagina - metade;
-                        ini = Math.max(ini, 0);
+                        metade = ~~(this.qtdDePaginacao / 2);                        
+                        ini = Math.max(pagina - metade, 0);
                         fim = Math.min(ini + this.qtdDePaginacao, totalDePaginas);
                         if (fim - ini < totalDePaginas) {
                             ini = Math.max(fim - this.qtdDePaginacao, 0);
