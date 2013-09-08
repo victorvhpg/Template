@@ -14,7 +14,6 @@
                 display: inline-block;
                 padding-left: 0;
                 margin: 20px 0;
-                border-radius: 10px;
             }
             .paginacao > li{
                 display: inline;
@@ -83,7 +82,6 @@
                         }
                         metade = ~~(this.qtdDePaginacao / 2);
                         ini = pagina - metade;
-                        fim = ini + this.qtdDePaginacao;
                         ini = Math.max(ini, 0);
                         fim = Math.min(ini + this.qtdDePaginacao, totalDePaginas);
                         if (fim - ini < totalDePaginas) {
@@ -169,7 +167,7 @@
                         identificacao: _aleatorio(20)
                     });
                 }
-
+                var ini = Date.now();
                 $("#grid-conteudo").html(Template.renderizar({
                     template: $("#grid-conteudo-template").html(),
                     dados: dados,
@@ -182,6 +180,7 @@
                 }));
                 //paginar ....
                 Paginacao.paginar($("#grid-conteudo").closest("table"));
+                console.log("tempo: " + (Date.now() - ini));
 
             });
 
@@ -202,7 +201,7 @@
                 <td> {@status} </td>
                 <td> {@nota}</td> 
                 <td> {@identificacao}</td> 
-                </tr>	
+            </tr>	
         </script>
 
         <table>
