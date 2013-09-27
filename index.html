@@ -5,7 +5,7 @@
         <title> Template -  victorvhpg</title>
 
         <script type='text/javascript' src='//code.jquery.com/jquery-2.0.2.js'></script>
-        <script type='text/javascript' src="http://victorvhpg.github.io/Template/Template.js"></script>
+        <script type='text/javascript' src="./Template.js"></script>
 
 
         <style type='text/css'>
@@ -37,9 +37,19 @@
                 for (var i = 0; i < 1999; i++) {
                     dados.push({
                         codigo: i,
+                        categoria: {
+                            nome: "categoria ccccccc",
+                            cor: {
+                                codigo: _aleatorio(20),
+                                descricao: _aleatorio(4)
+                            }
+                        },
                         titulo: _aleatorio(20),
                         status: (["Erro", "OK", "####"])[~~(Math.random() * 3)],
                         nota: ~~(Math.random() * 11),
+                        getNota: function() {
+                            return this.nota;
+                        },
                         identificacao: _aleatorio(20)
                     });
                 }
@@ -52,7 +62,7 @@
                         if (obj.status === "Erro") {
                             $linha.css("background-color", "#ff0000");
                         }
-                        console.log(obj);
+                        // console.log(obj);
                         return $linha;
                     }
                 }));
@@ -71,8 +81,9 @@
             <tr data-codigo="{@codigo}" > 
             <td> {@titulo} </td>
             <td> {@status}</td> 
-            <td> {@nota} </td>
-            <td> {@identificacao}</td> 
+            <td> {@getNota()} </td>
+            <td> {@identificacao.toUpperCase()}</td> 
+            <td> {@categoria.cor.descricao} </td>
             </tr>
         </script>
         <table>
@@ -82,6 +93,7 @@
                     <th>status</th>
                     <th>nota</th>
                     <th>identificacao</th>
+                    <th>categoria.cor.descricao</th>
                 </tr>
             </thead>
             <tbody id="grid-conteudo"></tbody>

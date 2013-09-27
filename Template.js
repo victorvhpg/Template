@@ -12,7 +12,7 @@ var Template = (function(window) {
         parametroInicio: "{@",
         parametroFim: "}"
     },
-    document = window.document, Template, $ = window.jQuery;
+    document = window.document, Template, $ = window.jQuery, JSON = window.JSON;
 
     Template = function(config) {
         this.config = $.extend({}, _configPadrao, config);
@@ -35,10 +35,19 @@ var Template = (function(window) {
                 vetObjDados = [vetObjDados];
             }
             for (var i = 0, len = vetObjDados.length; i < len; i++) {
-                item = template;
-                for (var j in vetObjDados[i]) {
-                    item = item.replace(new RegExp(parametroInicio + j + parametroFim, "g"), vetObjDados[i][j]);
-                }
+                item = template.replace(new RegExp(parametroInicio + "(.*?)" + parametroFim, "g"), function(parametroCompleto, parametro) {
+                    var obj = vetObjDados[i],
+                    objs = parametro.split("."), args;
+                    parametro = objs[objs.length - 1];
+                    for (var j = 0; j < objs.length - 1; j++) {
+                        obj = obj[objs[j]];
+                    }
+                    parametro = parametro.replace(/\((.*?)\)/, function(parenteses, argumentos) {
+                        args = argumentos;
+                        return "";
+                    });
+                    return  (typeof obj[parametro] === "function") ? obj[parametro](args) : obj[parametro];
+                });
                 $linhaHTML = $($.trim(item));
                 serializaObj && $linhaHTML.attr("data-template-obj", JSON.stringify(vetObjDados[i]));
                 if (typeof aCadaLinha === "function") {
