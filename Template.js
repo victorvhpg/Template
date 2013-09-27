@@ -37,9 +37,9 @@ var Template = (function(window) {
             for (var i = 0, len = vetObjDados.length; i < len; i++) {
                 item = template.replace(new RegExp(parametroInicio + "(.*?)" + parametroFim, "g"), function(parametroCompleto, parametro) {
                     var obj = vetObjDados[i],
-                    objs = parametro.split("."), args;
+                            objs = parametro.split("."), args;
                     parametro = objs[objs.length - 1];
-                    for (var j = 0; j < objs.length - 1; j++) {
+                    for (var j = 0, l = objs.length - 1; j < l; j++) {
                         obj = obj[objs[j]];
                     }
                     parametro = parametro.replace(/\((.*?)\)/, function(parenteses, argumentos) {
@@ -62,6 +62,12 @@ var Template = (function(window) {
     Template.renderizar = function(parametros) {
         var tmpl = Template.getInstancia(parametros.config);
         return tmpl.renderizar(parametros);
-    };
+    };    
+    
+    if (typeof define === "function" && define.amd) {
+        define(function() {
+            return Template;
+        });
+    }
     return Template;
 })(window);
