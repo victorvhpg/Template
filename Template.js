@@ -69,5 +69,6 @@ var Template = (function(window) {
             return Template;
         });
     }
+	
     return Template;
 })(window);
