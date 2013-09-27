@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title> Template -  victorvhpg</title>
+
+
+        <script type='text/javascript' src='//requirejs.org/docs/release/2.1.8/minified/require.js'></script>
+
+
+
+        <style type='text/css'>
+            table td, table th {
+                border:1px solid #ccc;
+            }
+            table th {
+                background-color:#ddd
+            }
+        </style>
+
+
+
+        <script type='text/javascript'>
+            requirejs.config({
+                paths: {
+                    jquery: "//code.jquery.com/jquery-2.0.2"
+                }
+            });
+            //=====================================================
+            
+            
+            require(["jquery", "Template"], function(jQuery, Template) {
+
+                jQuery(function($) {
+                    "use strict";
+                    //gerar dados aleatorios
+                    var _aleatorio = function(qtd) {
+                        var _tamanho, _caracteres = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+                        _tamanho = _caracteres.length;
+                        return (function(caracteres, tamanho) {
+                            return(Array.apply(null, new Array(qtd))).map(function() {
+                                return caracteres.charAt(~~(Math.random() * tamanho));
+                            }).join("");
+                        })(_caracteres, _tamanho);
+                    };
+                    var dados = [];
+                    for (var i = 0; i < 1999; i++) {
+                        dados.push({
+                            codigo: i,
+                            categoria: {
+                                nome: "categoria ccccccc",
+                                cor: {
+                                    codigo: _aleatorio(20),
+                                    descricao: _aleatorio(4)
+                                }
+                            },
+                            titulo: _aleatorio(20),
+                            status: (["Erro", "OK", "####"])[~~(Math.random() * 3)],
+                            nota: ~~(Math.random() * 11),
+                            getNota: function() {
+                                return this.nota;
+                            },
+                            identificacao: _aleatorio(20)
+                        });
+                    }
+                    //===========================
+                    //exibir os dados
+                    $("#grid-conteudo").html(Template.renderizar({
+                        template: $("#grid-conteudo-template").html(),
+                        dados: dados,
+                        aCadaLinha: function($linha, obj) {
+                            if (obj.status === "Erro") {
+                                $linha.css("background-color", "#ff0000");
+                            }
+                            // console.log(obj);
+                            return $linha;
+                        }
+                    }));
+
+                });
+
+            });
+
+
+        </script>
+
+
+    </head>
+    <body>
+        @victorvhpg<br />
+        <a href="https://github.com/victorvhpg/Template" >https://github.com/victorvhpg/Template</a>
+        <br /><br />
+        <script type="text/template" id="grid-conteudo-template">
+            <tr data-codigo="{@codigo}" > 
+            <td> {@titulo} </td>
+            <td> {@status}</td> 
+            <td> {@getNota()} </td>
+            <td> {@identificacao.toUpperCase()}</td> 
+            <td> {@categoria.cor.descricao} </td>
+            </tr>
+        </script>
+        <table>
+            <thead>
+                <tr>
+                    <th>titulo</th>
+                    <th>status</th>
+                    <th>nota</th>
+                    <th>identificacao</th>
+                    <th>categoria.cor.descricao</th>
+                </tr>
+            </thead>
+            <tbody id="grid-conteudo"></tbody>
+        </table>
+    </body>
+</html>
