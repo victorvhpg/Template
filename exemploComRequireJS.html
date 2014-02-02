@@ -5,7 +5,7 @@
         <title> Template -  victorvhpg</title>
 
 
-        <script type='text/javascript' src='//requirejs.org/docs/release/2.1.8/minified/require.js'></script>
+        <script type='text/javascript' src='http://requirejs.org/docs/release/2.1.8/minified/require.js'></script>
 
 
 
@@ -23,7 +23,12 @@
         <script type='text/javascript'>
             requirejs.config({
                 paths: {
-                    jquery: "//code.jquery.com/jquery-2.0.2"
+                    jquery: "http://code.jquery.com/jquery-2.0.2"
+                },
+                shim:{
+                    Template:{
+                        deps: ["jquery"]
+                    }
                 }
             });
             //=====================================================
